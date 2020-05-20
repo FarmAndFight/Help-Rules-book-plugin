@@ -1,0 +1,9 @@
+name: Help-Rules-Book
+version: 1.0
+author: Topeka_, Adien1106
+main: fr.topeka.HelpRulesBook.Main
+api-version: 1.14
+commands:
+  new:
+    description: Open a book (GUI)
+    permission: HelpRulesBook.use

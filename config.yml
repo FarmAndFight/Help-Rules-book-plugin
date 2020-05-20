@@ -1,0 +1,14 @@
+book:
+  title: "Un magnifique titre"
+  author: "Auteur du livre"
+  pages:
+  - |
+    Premier page
+    C'est beau tu trouve pas ?
+  - |
+    ça c'est Seconde page.
+    Magnifique non ?
+  - |
+    Et cette troisème alors ?
+    la meilleure de toutes !
+    Tu trouves pas ?
