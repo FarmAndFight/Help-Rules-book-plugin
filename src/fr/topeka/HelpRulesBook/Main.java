@@ -1,33 +1,31 @@
 package fr.topeka.HelpRulesBook;
 
-import java.util.List;
-
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import fr.topeka.HelpRulesBook.commands.CommandNew;
+import fr.topeka.HelpRulesBook.listener.PlayerJoinListener;
 
 public class Main extends JavaPlugin{
 
-	public String _title, _author;
-	public List<String> _pages;
+	public Book _book;
 	
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
-		loadConfig();
+		_book = new Book(this);
+		_book.loadConfig();
+		if(!_book.createBook()) {
+			getServer().getPluginManager().disablePlugin(this);
+		}
 		getCommand("new").setExecutor(new CommandNew(this));
+		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvents(new PlayerJoinListener(this), this);
 	}
 	
 	@Override
 	public void onDisable() {
 		
-	}
-	
-	
-	public void loadConfig() {
-		this._title = getConfig().getString("book.title");
-		this._author = getConfig().getString("book.author");
-		this._pages = getConfig().getStringList("book.pages");
 	}
 	
 }
