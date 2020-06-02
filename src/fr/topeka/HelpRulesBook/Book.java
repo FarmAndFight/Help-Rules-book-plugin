@@ -24,7 +24,7 @@ public class Book {
 		meta.setTitle(_title);
 		meta.setAuthor(_author);
 		for(int i=0;i<_pages.size();i++)
-			meta.addPage(_pages.get(i));
+			meta.addPage(_pages.get(i).replace("&", "§"));
 		if(book.setItemMeta(meta)) 
 			return true;
 		return false;
