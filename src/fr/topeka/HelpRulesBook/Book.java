@@ -1,6 +1,5 @@
 package fr.topeka.HelpRulesBook;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -8,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -30,57 +28,47 @@ public class Book {
 		BookMeta meta = (BookMeta) book.getItemMeta();
 		meta.setTitle(_title);
 		meta.setAuthor(_author);
-		int lastCaracter = 0;
-		BaseComponent[] page = new ComponentBuilder("").create();
-		List<String> subPage = new ArrayList<String>();
+		ComponentBuilder page = new ComponentBuilder(""); 
 		for (String rawPage: _pages){
+			rawPage = rawPage.replace("&", "ง");
 			if (rawPage.contains("{") && rawPage.contains("}")) {
-				while (rawPage.length() != 0) {
-					if (!rawPage.substring(rawPage.indexOf("{", lastCaracter)-1, rawPage.indexOf("{", lastCaracter)+1).contains("\\")) {
-						subPage.add(rawPage.substring(0, rawPage.indexOf("{", lastCaracter)));
-						rawPage = rawPage.substring(rawPage.indexOf("{", lastCaracter), rawPage.length());
-						while (!rawPage.substring(rawPage.indexOf("}", lastCaracter)-1, rawPage.indexOf("}", lastCaracter)+1).contains("\\")) {
-							lastCaracter = rawPage.indexOf("}", lastCaracter)+1;
+				String[] sections = rawPage.split("\\{|\\}");
+				boolean edit = false;
+				TextComponent message = new TextComponent();
+				for(String section : sections) {
+					if(!edit) {
+						message.addExtra(message);
+					}else {
+						String[] elements = section.split(",");
+						TextComponent eventBuilder = new TextComponent(elements[0]);
+						if(!elements[1].equals("")) {
+							eventBuilder.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(elements[1]).create()));
 						}
-						subPage.add(rawPage.substring(0, rawPage.indexOf("}", lastCaracter)));
-						rawPage = rawPage.substring(rawPage.indexOf("}", lastCaracter), rawPage.length());
+						if(elements[2].startsWith("true")) {
+							if(elements[2].startsWith("OPEN_URL", 5)) {
+								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 2)));
+							}
+							if(elements[2].startsWith("RUN_COMMAND", 5)) {
+								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 2)));
+
+							}
+							if(elements[2].startsWith("SUGGEST_COMMAND", 5)) {
+								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 2)));
+
+							}
+							if(elements[2].startsWith("CHANGE_PAGE", 5)) {
+								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 2)));
+
+							}
+							page.append(eventBuilder);
+						}
 					}
-					else if (rawPage.substring(rawPage.indexOf("{", lastCaracter)-1, rawPage.indexOf("{", lastCaracter)+1).contains("\\")) {
-						lastCaracter = rawPage.indexOf("{", lastCaracter);
-					}
-					else {
-						subPage.add(rawPage.replace("&", "ยง"));
-						rawPage = "";
-					}
+					edit = !edit;
 				}
-				for (int i = subPage.size()-1; i != 0; i--) {
-					if (!subPage.get(i).startsWith("{")) {
-						page = new ComponentBuilder(subPage.get(i)).append(page).create();
-					}
-					else if (subPage.get(i).startsWith("{")) {
-						TextComponent eventBuilder = new TextComponent(subPage.get(i).split(",")[0].substring(1));
-						if (!subPage.get(i).split(",")[1].equals("")) {
-							eventBuilder.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(subPage.get(i).split(",")[1]).create()));
-						}
-						if(subPage.get(i).split(",")[2].startsWith("true")) {
-							if (subPage.get(i).split(",")[2].startsWith("CHANGE_PAGE", 5)) {
-								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, subPage.get(i).split(",")[2].substring(subPage.get(i).split(",")[2].indexOf(".") + 1, subPage.get(i).split(",")[2].length() - 2)));
-							}
-							else if (subPage.get(i).split(",")[2].startsWith("OPEN_URL", 5)) {
-								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, subPage.get(i).split(",")[2].substring(subPage.get(i).split(",")[2].indexOf(".") + 1, subPage.get(i).split(",")[2].length() - 2)));
-							}
-							else if (subPage.get(i).split(",")[2].startsWith("RUN_COMMAND", 5)) {
-								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, subPage.get(i).split(",")[2].substring(subPage.get(i).split(",")[2].indexOf(".") + 1, subPage.get(i).split(",")[2].length() - 2)));
-							}
-							else if (subPage.get(i).split(",")[2].startsWith("SUGGEST_COMMAND", 5)) {
-								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, subPage.get(i).split(",")[2].substring(subPage.get(i).split(",")[2].indexOf(".") + 1, subPage.get(i).split(",")[2].length() - 2)));
-							}
-						}
-						page = new ComponentBuilder(eventBuilder).append(page).create();
-					}
-				}
+			}else {
+				page.append(rawPage);
 			}
-			meta.spigot().addPage(page);
+			meta.spigot().addPage(page.create());
 		}
 		if(book.setItemMeta(meta)) {
 			return true;
