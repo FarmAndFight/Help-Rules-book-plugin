@@ -31,7 +31,7 @@ public class Book {
 		meta.setTitle(_title);
 		meta.setAuthor(_author);
 		int lastCaracter = 0;
-		BaseComponent[] page = new ComponentBuilder().create();
+		BaseComponent[] page = new ComponentBuilder("").create();
 		List<String> subPage = new ArrayList<String>();
 		for (String rawPage: _pages){
 			if (rawPage.contains("{") && rawPage.contains("}")) {
@@ -65,9 +65,6 @@ public class Book {
 						if(subPage.get(i).split(",")[2].startsWith("true")) {
 							if (subPage.get(i).split(",")[2].startsWith("CHANGE_PAGE", 5)) {
 								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, subPage.get(i).split(",")[2].substring(subPage.get(i).split(",")[2].indexOf(".") + 1, subPage.get(i).split(",")[2].length() - 2)));
-							}
-							else if (subPage.get(i).split(",")[2].startsWith("COPY_TO_CLIPBOARD", 5)) {
-								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, subPage.get(i).split(",")[2].substring(subPage.get(i).split(",")[2].indexOf(".") + 1, subPage.get(i).split(",")[2].length() - 2)));
 							}
 							else if (subPage.get(i).split(",")[2].startsWith("OPEN_URL", 5)) {
 								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, subPage.get(i).split(",")[2].substring(subPage.get(i).split(",")[2].indexOf(".") + 1, subPage.get(i).split(",")[2].length() - 2)));
