@@ -2,8 +2,18 @@ book:
   title: "Un magnifique titre"
   author: "Auteur du livre"
   pages:
+  #You can add clickable text by writing it like the following example
+  #random_text {your_text_with_abilities,hover_message,click_event<true or false>(action,argument)} other_random_text
+  # ACTION_LIST: CHANGE_PAGE, COPY_TO_CLIPBOARD, OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+  #examples:
+  #  - This is an example
+  #    if a player click {here,he would see this message by hovering,true(CHANGE_PAGE.4)}
+  #    he would open page 4
+  #    if she exist
+  #note that if you want to write an { or } in your text put a \ before
+  #colors are also supported with &, help available on https://minecraft.tools/en/color-code.php
   - |
-    Premier page
+    Premiere page
     C'est beau tu trouve pas ?
   - |
     ça c'est Seconde page.
@@ -12,3 +22,8 @@ book:
     Et cette troisème alors ?
     la meilleure de toutes !
     Tu trouves pas ?
+  - |
+    This is an example
+    if a player click {here,he would see this message by hovering,true(CHANGE_PAGE.1)}
+    he would open page 1
+    if she exist
