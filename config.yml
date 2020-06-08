@@ -11,7 +11,7 @@ book:
   #    he would open page 4
   #    if she exist
   #note that if you want to write an { or } in your text put a \ before
-  #colors are also supported with &, help available on https://minecraft.tools/en/color-code.php
+  #colors are also supported with & and §, help available on https://minecraft.tools/en/color-code.php
   - |
     Premiere page
     C'est beau tu trouve pas ?
@@ -27,3 +27,6 @@ book:
     if a player click {here,he would see this message by hovering,true(CHANGE_PAGE.1)}
     he would open page 1
     if she exist
+    {Link,he would see this message by hovering,true(OPEN_URL.https://spigotmc.org)}
+    {Command,he would see this message by hovering,true(RUN_COMMAND./say salut)}
+    {Suggest,he would see this message by hovering,true(SUGGEST_COMMAND./say salut)}

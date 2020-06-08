@@ -28,16 +28,16 @@ public class Book {
 		BookMeta meta = (BookMeta) book.getItemMeta();
 		meta.setTitle(_title);
 		meta.setAuthor(_author);
-		ComponentBuilder page = new ComponentBuilder(""); 
 		for (String rawPage: _pages){
-			rawPage = rawPage.replace("&", "ง");
+			ComponentBuilder page = new ComponentBuilder("");
+			rawPage = rawPage.replace("&", "ยง");
 			if (rawPage.contains("{") && rawPage.contains("}")) {
 				String[] sections = rawPage.split("\\{|\\}");
 				boolean edit = false;
 				TextComponent message = new TextComponent();
 				for(String section : sections) {
 					if(!edit) {
-						message.addExtra(message);
+						message.addExtra(section);
 					}else {
 						String[] elements = section.split(",");
 						TextComponent eventBuilder = new TextComponent(elements[0]);
@@ -45,26 +45,28 @@ public class Book {
 							eventBuilder.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(elements[1]).create()));
 						}
 						if(elements[2].startsWith("true")) {
+//							System.out.println(elements[2].substring(5, elements[2].length() - 1));
 							if(elements[2].startsWith("OPEN_URL", 5)) {
-								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 2)));
+								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 1)));
 							}
 							if(elements[2].startsWith("RUN_COMMAND", 5)) {
-								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 2)));
+								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 1)));
 
 							}
 							if(elements[2].startsWith("SUGGEST_COMMAND", 5)) {
-								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 2)));
+								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 1)));
 
 							}
 							if(elements[2].startsWith("CHANGE_PAGE", 5)) {
-								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 2)));
+								eventBuilder.setClickEvent(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, elements[2].substring(elements[2].indexOf(".") + 1, elements[2].length() - 1)));
 
 							}
-							page.append(eventBuilder);
 						}
+						message.addExtra(eventBuilder);
 					}
 					edit = !edit;
 				}
+				page.append(message);
 			}else {
 				page.append(rawPage);
 			}
